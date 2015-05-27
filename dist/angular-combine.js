@@ -1,4 +1,4 @@
-/*! angular-combine - v0.1.3 - 2014-12-19 */
+/*! angular-combine - 2015-05-27 */
 'use strict';
 
 angular.module('angularCombine', []);
@@ -9,7 +9,6 @@ angular.module('angularCombine').provider('angularCombineConfig', function () {
 	var config = [];
 
 	this.addConf = function (regexp, combinedUrl) {
-		console.log("Add conf to angularCombine", regexp, combinedUrl);
 		config.push({
 			regexp : regexp,
 			combinedUrl : combinedUrl
@@ -32,7 +31,6 @@ angular.module('angularCombine').config(["$provide", function ($provide) {
 			var combinedTplPromise;
 			return function (url) {
 				if (!combinedTplPromise) {
-					console.log('fetching all templates combined into ', combinedUrl);
 					combinedTplPromise = $http.get(combinedUrl).then(function (response) {
 						$injector.get('$compile')(response.data);
 						return response;
@@ -56,12 +54,13 @@ angular.module('angularCombine').config(["$provide", function ($provide) {
 		$delegate.get = function (url) {
 			for (idx in angularCombineConfig) {
 				conf = angularCombineConfig[idx];
-				if (conf.regexp.test(url)) {
+				if (conf.regexp && conf.regexp.test(url)) {
 					return conf.load(url);
 				}
 			}
 			return origGetMethod(url);
 		};
+
 		return $delegate;
 	} ]);
 }]);
