@@ -10,7 +10,6 @@ angular.module('angularCombine').config(function ($provide) {
 			var combinedTplPromise;
 			return function (url) {
 				if (!combinedTplPromise) {
-					console.log('fetching all templates combined into ', combinedUrl);
 					combinedTplPromise = $http.get(combinedUrl).then(function (response) {
 						$injector.get('$compile')(response.data);
 						return response;
